@@ -11,16 +11,37 @@
                     WinPhone="20, 20, 20, 20" />
      </ContentPage.Padding>
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand"
-                     HorizontalOptions="FillAndExpand"
-                     Orientation="Vertical"
-                     Spacing="15">
-            <Image Source="logo_mp.png" />
-            <Label Text="Información Descarga Pesca" TextColor="White"/>
-            <Entry x:Name="eUserName" Placeholder="usuário" />
-            <Entry x:Name="eUserPassword" Placeholder="contraseña" IsPassword="true" />
-            <Button x:Name="bEnterLogin" Text="    Entrar    "  BorderColor="Aqua" BackgroundColor="Silver" TextColor="Teal" Clicked="OnSignIn" HorizontalOptions="Center" />
+        <AbsoluteLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand">
+            <StackLayout 
+            		AbsoluteLayout.LayoutBounds="0,0.05,1,0.1"
+             		AbsoluteLayout.LayoutFlags="All">
+            		<Image Source="logo_minproduce.png"
+            			   HorizontalOptions="FillAndExpand"
+            			   VerticalOptions="FillAndExpand"/>
+            </StackLayout>
+            <Label Text="Avance Temporada de Pesca" TextColor="White"
+            		FontSize="Large"
+            		AbsoluteLayout.LayoutBounds="0,0.32,1,0.1"
+             		AbsoluteLayout.LayoutFlags="All"/>
+            <Entry x:Name="eUserName" Placeholder="D.N.I."  Text="Funcionario"
+            		AbsoluteLayout.LayoutBounds="0,0.43,1,0.1"
+             		AbsoluteLayout.LayoutFlags="All"/>
+            <Entry x:Name="eUserPassword" Placeholder="Password" IsPassword="true" Text="123abc"
+            		AbsoluteLayout.LayoutBounds="0,0.53,1,0.1"
+             		AbsoluteLayout.LayoutFlags="All"/>
+            <Label Text="Intentos Restantes: " TextColor="#212121"
+            		FontSize="Medium"
+            		AbsoluteLayout.LayoutBounds="0,0.66,1,0.1"
+             		AbsoluteLayout.LayoutFlags="All"/>
+            <Button x:Name="bEnterLogin" Text="    Entrar    "  BorderColor="#E57373" BackgroundColor="#EF5350" TextColor="#212121" Clicked="OnSignIn" HorizontalOptions="Center" 
+            		AbsoluteLayout.LayoutBounds="0.15,0.9,0.3,0.1"
+             		AbsoluteLayout.LayoutFlags="All"/>
+            <Button x:Name="bCancelarLogin" Text="    Cancelar    "  BorderColor="#E57373" BackgroundColor="#EF5350" TextColor="#212121"  HorizontalOptions="Center"
+            		AbsoluteLayout.LayoutBounds="0.85,0.9,0.3,0.1"
+             		AbsoluteLayout.LayoutFlags="All" />
 
-        </StackLayout>
+         
+        </AbsoluteLayout>
     </ContentPage.Content>
 </ContentPage>

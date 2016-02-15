@@ -4,6 +4,11 @@
 // A copy of the current license can be obtained at any time by e-mailing
 // licensing@syncfusion.com. Any infringement will be prosecuted under
 // applicable laws. 
+using System.Threading.Tasks;
+using System.Net.Http;
+using Newtonsoft.Json;
+
+
 #endregion
 using Syncfusion.SfChart.XForms;
 using System;
@@ -17,10 +22,19 @@ namespace PesqueraXamarinForms
 {
 	public class ResumenTemporadaPie : ContentPage
 	{
+		private StackLayout main_layout;
 		private Picker pmenu_pesquera_;
+		private Picker p_list_period;
+		private Picker p_list_year;
+		private Picker p_list_zone;
+		private double exploratoria;
+		private double temporada;
+		private double saldo;
+
 		public ResumenTemporadaPie()
 		{
-			this.Content = GetChart();
+			GetChart ();
+			this.Content = main_layout;
 		}
 
 		async void ShowMyPage(){
@@ -48,8 +62,57 @@ namespace PesqueraXamarinForms
 			await Navigation.PushAsync( new PescaDiaColumnSpline() ) ;
 		}
 
-		private  StackLayout GetChart()
+
+		async public Task  getData () {
+		
+			var anio = int.Parse("2015");
+			var zona = int.Parse("11");
+			var per = int.Parse("1");
+
+			//String url = "http://apptemporadapesca.produce.gob.pe/api/Grafico01?anotempo={0}&codigoZona={1}&periodo={2}"; 
+
+
+			var url = string.Format("http://apptemporadapesca.produce.gob.pe/api/Grafico01?anotempo={0}&codigoZona={1}&periodo={2}", anio, zona, per);
+			await GetWeatherAsync(url);
+
+		}
+
+		public async Task GetWeatherAsync(string url) {
+			
+			HttpClient client = new HttpClient();
+			client.BaseAddress = new Uri(url);
+
+			client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+
+			var response =  await client.GetAsync(client.BaseAddress);
+		    response.EnsureSuccessStatusCode();
+			var JsonResult = response.Content.ReadAsStringAsync().Result;
+			var weather = JsonConvert.DeserializeObject<dtoGrafico01[]>(JsonResult);
+			if (weather.Length > 0)
+				SetValues(weather[0]);
+		}
+
+		private void SetValues(dtoGrafico01 weather) {
+			string stationName = weather.codigoZona;
+			long elevation =  (long)weather.avancePorcentaje;
+			long temperature = (long)weather.cuotaSaldo;
+			long humidity = weather.anoTempo;
+
+		//	StationName = stationName;
+			//Elevation = elevation;
+		//	Temperature = temperature;
+		//	Humidity = humidity;
+			exploratoria = weather.tmExploratoria;
+			temporada = weather.tmTemporada;
+			saldo = weather.cuotaSaldo;
+		}
+
+
+		private void GetChart()
 		{
+
+			getData ();
+
 			/*
 			main_layout.Orientation = StackOrientation.Vertical;
 			main_layout.Spacing = 15;
@@ -67,10 +130,10 @@ namespace PesqueraXamarinForms
 			datas.Add (new ChartDataPoint ("Saldo", 20));
 
 
+			//PieSeries
+			DoughnutSeries pie = new DoughnutSeries();
 
-			PieSeries pie = new PieSeries();
-
-			pie.ExplodeOnTouch = true;
+			//pie.ExplodeOnTouch = true;
 			pie.ItemsSource = datas;
 			pie.LegendIcon = ChartLegendIcon.Diamond;
 			//pie.EnableDataPointSelection = true;
@@ -91,7 +154,7 @@ namespace PesqueraXamarinForms
 			////////////// Picker#
 			/// 
 			/// Picker Period
-			Picker p_list_period = new Picker
+			p_list_period = new Picker
 			{
 				Title = "Periodo",
 				VerticalOptions = LayoutOptions.StartAndExpand
@@ -106,7 +169,7 @@ namespace PesqueraXamarinForms
 			p_list_period.SelectedIndex = 0;
 
 			/// Picker year
-			Picker p_list_year = new Picker
+			p_list_year = new Picker
 			{
 				Title = "Año",
 				VerticalOptions = LayoutOptions.StartAndExpand
@@ -120,7 +183,7 @@ namespace PesqueraXamarinForms
 			p_list_year.SelectedIndex = 0;
 
 			/// Picker zona
-			Picker p_list_zone = new Picker
+			p_list_zone = new Picker
 			{
 				Title = "Zona",
 				VerticalOptions = LayoutOptions.StartAndExpand
@@ -158,7 +221,7 @@ namespace PesqueraXamarinForms
 			pmenu_pesquera_.VerticalOptions = LayoutOptions.Start;
 
 		
-			StackLayout main_layout = new StackLayout (){
+			main_layout = new StackLayout (){
 				Padding = GlobalParameters.MAIN_LAYOUT_PADDING_,
 				Spacing = 0,
 				VerticalOptions = LayoutOptions.FillAndExpand,
@@ -205,7 +268,6 @@ namespace PesqueraXamarinForms
 					chart
 				}
 			};
-			return main_layout;
 		}
 
 
@@ -233,7 +295,7 @@ namespace PesqueraXamarinForms
 
 			// WHEN p_list_menu is selected
 			p_list_menu.SelectedIndexChanged += (sender, args) =>
-			{
+			{ 
 				if (p_list_menu.SelectedIndex == -1)
 				{
 				}

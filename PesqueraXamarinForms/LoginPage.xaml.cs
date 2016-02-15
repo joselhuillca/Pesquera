@@ -35,11 +35,12 @@ namespace PesqueraXamarinForms
 		//Function to autentificate username and password, it may change accodingly
 		bool IsValidUsernameAndPassword(){
 			//return true;
-			if ( eUserName.Text == "funcionario" && eUserPassword.Text == "123abc" ){
+			if ( eUserName.Text == "Funcionario" && eUserPassword.Text == "123abc" ){
 				return true;
 			}
 			return false;
 		}
+
 	}
 }
 
